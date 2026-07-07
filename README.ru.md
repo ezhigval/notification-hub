@@ -5,11 +5,11 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Tier](https://img.shields.io/badge/tier-middle-5319e7)
 
-**English** · [Русский](README.ru.md)
+**[English](README.md)** · Русский
 
-Unified notification delivery: email, push, SMS (mock). Kafka priority queues, exponential retry, DLQ, Redis dedup.
+Единая доставка уведомлений: email, push, SMS (mock). Очереди Kafka по приоритетам, экспоненциальный retry, DLQ, дедупликация в Redis.
 
-## Quick start
+## Быстрый старт
 
 ```bash
 make docker-up && sleep 3 && make seed
@@ -24,24 +24,24 @@ curl -s -X POST localhost:8088/api/v1/notifications \
     "variables":{"Name":"Valentin","OrderID":"42"}
   }' | jq
 
-# poll status
+# проверить статус
 curl -s localhost:8088/api/v1/notifications/1 | jq .status
 curl -s localhost:8088/api/v1/notifications/1/attempts | jq
 ```
 
-Force retry path: use recipient `fail-email@x.com` — fails twice then lands in DLQ after 3 attempts.
+Путь с retry: получатель `fail-email@x.com` — два сбоя, затем DLQ после 3 попыток.
 
 ## API
 
-| Method | Path | Notes |
-|--------|------|-------|
-| POST | `/api/v1/templates` | register template |
-| GET | `/api/v1/templates` | list |
-| POST | `/api/v1/notifications` | `Idempotency-Key` header |
-| GET | `/api/v1/notifications/{id}` | status |
-| GET | `/api/v1/notifications/{id}/attempts` | delivery log |
+| Метод | Путь | Примечания |
+|--------|------|------------|
+| POST | `/api/v1/templates` | зарегистрировать шаблон |
+| GET | `/api/v1/templates` | список |
+| POST | `/api/v1/notifications` | заголовок `Idempotency-Key` |
+| GET | `/api/v1/notifications/{id}` | статус |
+| GET | `/api/v1/notifications/{id}/attempts` | лог доставки |
 
-## Architecture
+## Архитектура
 
 ```
 HTTP ──► PG + Redis dedup ──► Kafka (high/normal/low topics)
@@ -53,16 +53,16 @@ HTTP ──► PG + Redis dedup ──► Kafka (high/normal/low topics)
                                     └── DLQ topic after max attempts
 ```
 
-## Priority topics
+## Топики по приоритету
 
-- `notifications.high` — transactional alerts
-- `notifications.normal` — default
-- `notifications.low` — marketing batch
+- `notifications.high` — транзакционные алерты
+- `notifications.normal` — по умолчанию
+- `notifications.low` — маркетинговые рассылки
 
-Separate consumer readers per topic; same consumer group.
+Отдельные consumer reader на топик; одна consumer group.
 
-## Stack
+## Стек
 
 Go 1.25 · chi · PostgreSQL · Redis · Kafka · text/template · [go-toolkit](https://github.com/ezhigval/go-toolkit)
 
-Port **8088** · MIT
+Порт **8088** · MIT
