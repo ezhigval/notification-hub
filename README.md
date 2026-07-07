@@ -1,5 +1,10 @@
 # notification-hub
 
+![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)
+[![CI](https://github.com/ezhigval/notification-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/ezhigval/notification-hub/actions/workflows/ci.yml)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Tier](https://img.shields.io/badge/tier-middle-5319e7)
+
 Unified notification delivery: email, push, SMS (mock). Kafka priority queues, exponential retry, DLQ, Redis dedup.
 
 ## Quick start
